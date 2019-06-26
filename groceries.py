@@ -43,6 +43,7 @@ def get_item_list(lists_to_use):
     canned = []
     soda = []
     dairy = []
+    beauty = []
     frozen = []
     misc = []
     for trello_list in lists_to_use:
@@ -66,6 +67,8 @@ def get_item_list(lists_to_use):
                 soda.append(name)
             elif 'Dairy' in labels:
                 dairy.append(name)
+            elif 'Beauty' in labels:
+                beauty.append(name)
             else:
                 misc.append(name)
 
@@ -75,7 +78,7 @@ def get_item_list(lists_to_use):
 
     # Returns a list with items in their sections on how the Giant store is 
     #   oriented
-    return produce + meat + canned + soda + dairy + frozen + misc 
+    return produce + meat + canned + soda + dairy + beauty + frozen + misc 
 
 
 def create_trip(name, trello_list, items, desc=None, labels=None, due="null",
