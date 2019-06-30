@@ -37,48 +37,36 @@ def get_list(name, board):
 
 
 def get_item_list(lists_to_use):
-    items = []
-    produce = []
-    meat = []
-    canned = []
-    soda = []
-    dairy = []
-    beauty = []
-    frozen = []
-    misc = []
+    list_order = ['Produce', 'Meat', 'Frozen', 'Canned', 'Aisle 6', 'Soda',
+                  'Dairy', 'Beauty', 'Misc']
+    items = {}
+    for item in list_order:
+        items[item] = []
     for trello_list in lists_to_use:
         for card in trello_list.list_cards():
             card_labels = card.labels
             if card_labels is not None:
                 labels = [label.name for label in card_labels]
             else:
-                labels = [] 
+                labels = ['Misc']
 
             name = card.name
-            if 'Produce' in labels:
-                produce.append(name)
-            elif 'Meat' in labels:
-                meat.append(name)
-            elif 'Frozen' in labels:
-                frozen.append(name)
-            elif 'Canned' in labels:
-                canned.append(name)
-            elif 'Soda' in labels:
-                soda.append(name)
-            elif 'Dairy' in labels:
-                dairy.append(name)
-            elif 'Beauty' in labels:
-                beauty.append(name)
-            else:
-                misc.append(name)
+            print(labels)
+            try:
+                items[labels[0]].append(name)
+                
+            except KeyError as e:
+                items['Misc'].append(name)
 
             # Grocery items that are not needed that often and are one offs 
             if trello_list.name == 'Next trip':
                 card.set_closed(True)
-
     # Returns a list with items in their sections on how the Giant store is 
     #   oriented
-    return produce + meat + canned + soda + dairy + beauty + frozen + misc 
+    aisle_lists = []
+    for aisle_list in list_order:
+        aisle_lists += items[aisle_list]
+    return aisle_lists
 
 
 def create_trip(name, trello_list, items, desc=None, labels=None, due="null",
