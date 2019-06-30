@@ -6,7 +6,7 @@ import datetime
 
 
 def main():
-    card_name = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M')
+    card_name = datetime.datetime.strftime(datetime.datetime.now(), '%Y/%m/%d %H:%M')
     c = Config()
     client = c.connection
 
