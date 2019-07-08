@@ -15,11 +15,51 @@ def main():
     usual_list = get_list('Usual', grocery_board)
     next_trip_list = get_list('Next trip', grocery_board)
 
+
+    usual_items = get_usual_items(usual_list)
+    last_trip = get_last_trip(trip_list)
+    if last_trip is not None:
+        add_missed_items(next_trip_list, last_trip, usual_items)
+
     lists_to_use = [usual_list, next_trip_list]
     # Get the list of groceries from the Usual Trello list
     items = get_item_list(lists_to_use)
     card = create_trip(card_name, trip_list, items, position='top')
 
+
+def get_last_trip(trip_list):
+    today = datetime.datetime.now()
+    latest = 0
+    c = None
+    for card in trip_list.list_cards():
+        try:
+            card_date = datetime.datetime.strptime(card.name, '%Y/%m/%d')
+        except ValueError as e:
+            card_date = datetime.datetime.strptime(card.name, '%Y/%m/%d %H:%M')
+
+        delta = days_between(today, card_date)
+        if latest == 0:
+            latest = delta
+            c = card
+        elif delta < latest:
+            latest = delta
+            c = card
+    return c
+
+
+def add_missed_items(dst_list, last_trip_card, usual_items):
+    checklist = last_trip_card.checklist
+    for item in checklist.items:
+        if item['checked'] == False:
+            if item.name not in usual_items:
+                # Need to figure out a way to un-archive a card
+                dst_list.add_card(name + ' - Missed from last trip')
+            
+
+# https://stackoverflow.com/a/8419655
+def days_between(d1, d2):
+    return abs((d2 - d1).days)
+        
 
 def get_lists(names, board):
     lists = []
@@ -34,6 +74,13 @@ def get_list(name, board):
         if t_list.name == name:
             return t_list
     return None
+
+
+def get_usual_items(usual_list):
+    l = []
+    for card in usual_list.list_cards():
+        l.append(card.name)
+    return l
 
 
 def get_item_list(lists_to_use):
@@ -69,9 +116,9 @@ def get_item_list(lists_to_use):
     return aisle_lists
 
 
-def create_trip(name, trello_list, items, desc=None, labels=None, due="null",
+def create_trip(name, trello_list, items, desc=None, labels=None, due='null',
                 source=None, position=None, assign=None,
-                keep_from_source="checklist"):
+                keep_from_source='checklist'):
     card = trello_list.add_card(name, desc=desc, labels=labels, due=due,
                          source=source, position=position, assign=assign,
                          keep_from_source=keep_from_source)
