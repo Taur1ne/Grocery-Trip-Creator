@@ -48,7 +48,7 @@ def get_last_trip(trip_list):
 
 
 def add_missed_items(dst_list, last_trip_card, usual_items):
-    checklist = last_trip_card.checklist
+    checklist = last_trip_card.checklists[0]
     for item in checklist.items:
         if item['checked'] == False:
             if item.name not in usual_items:
