@@ -84,8 +84,8 @@ def get_usual_items(usual_list):
 
 
 def get_item_list(lists_to_use):
-    list_order = ['Produce', 'Meat', 'Frozen', 'Canned', 'Aisle 6', 'Soda',
-                  'Dairy', 'Beauty', 'Misc']
+    list_order = ['Produce', 'Meat', 'Canned', 'Aisle 6', 'Soda',
+                  'Dairy', 'Beauty', 'Frozen', 'Misc']
     items = {}
     for item in list_order:
         items[item] = []
