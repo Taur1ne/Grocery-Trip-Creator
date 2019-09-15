@@ -141,9 +141,9 @@ def get_item_list(lists_to_use):
                     except KeyError as e:
                         items['Misc'].append(name)
 
-                    # Grocery items that are not needed that often and are one offs 
-                    if trello_list.name == 'Next trip':
-                        card.set_closed(True)
+                # Grocery items that are not needed that often and are one offs 
+                if trello_list.name == 'Next trip':
+                    card.set_closed(True)
     # Returns a list with items in their sections on how the Giant store is 
     #   oriented
     aisle_lists = []
