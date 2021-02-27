@@ -51,7 +51,8 @@ def add_missed_items(dst_list, last_trip_card, usual_items):
     checklist = last_trip_card.checklists[0]
     for item in checklist.items:
         if item['checked'] == False:
-            if item.name not in usual_items:
+            name = item['name']
+            if name not in usual_items:
             # Need to figure out a way to un-archive a card
                 dst_list.add_card(name + ' - Missed from last trip')
             
@@ -93,7 +94,7 @@ def add_recipe_items(recipe_list, recipe_name, items_list):
             # Need a try except here at some point
             checklist = card.checklists[0]
             for item in checklist.items:
-                item_name, item_label = item['name'].split('-')
+                item_name, item_label = item['name'].split(' - ')
                 item_name = item_name.strip()
                 item_label = item_label.strip()
 
