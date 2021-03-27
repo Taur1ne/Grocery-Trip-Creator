@@ -160,12 +160,17 @@ def get_item_list(lists_to_use: List[trello.List]) -> List[str]:
         if trello_list.name.lower() != 'recipes':
             for card in trello_list.list_cards():
                 card_labels = card.labels
-                print(card_labels)
-                if 'Recipe' in [label.name for label in card_labels]:
+                label_names = []
+                try:
+                    label_names = [label.name for label in card_labels]
+                except TypeError:
+                    pass
+
+                if 'Recipe' in label_names:
                     add_recipe_items(recipe_list, card.name, items)
                 else:
                     if card_labels is not None:
-                        labels = [label.name for label in card_labels]
+                        labels = label_names
                     else:
                         labels = ['Misc']
 
