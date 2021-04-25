@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import argparse
 import datetime
+import pprint
 
 from typing import Dict, List, Optional
 
@@ -121,7 +122,8 @@ def add_recipe_items(recipe_list: trello.List, recipe_name: str,
     """
     print(items_list)
     for card in recipe_list.list_cards():
-        if card.name.lower() == recipe_name.lower():
+        if card.name.lower().strip() == recipe_name.lower().strip():
+            print(card.name.lower())
             # Checklist item will have the item name and label in it
             # e.g. 1 mango - Produce
 
@@ -141,6 +143,7 @@ def add_recipe_items(recipe_list: trello.List, recipe_name: str,
                 except KeyError as e:
                     print(e)
                     items_list[item_label].append(item_name)
+    pprint.pprint(items_list)
 
 
 def get_item_list(lists_to_use: List[trello.List]) -> List[str]:
