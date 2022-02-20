@@ -2,19 +2,31 @@
 import argparse
 import datetime
 import pprint
-
 from typing import Dict, List, Optional
 
-from config import Config
+from flask import Blueprint, redirect
 import trello
 
+from .config import Config
 
-def main():
+
+bp = Blueprint('trip', __name__, url_prefix='/trip')
+
+@bp.route('/short', methods=['GET'])
+def short_trip():
+    new_card = main(short_trip_arg=True, last_trip_arg=False)
+    return redirect(new_card.url, code=302)
+
+
+@bp.route('/long', methods=['GET'])
+def long_trip():
+    new_card = main(short_trip_arg=False, last_trip_arg=False)
+    return redirect(new_card.url, code=302)
+
+
+def main(short_trip_arg: bool = False, last_trip_arg: bool = False):
     """Create a grocery check list from Trello cards"""
 
-    args = get_args()
-    print(f'short trip: {args.short_trip}')
-    print(f'last trip: {args.last_trip}')
 
     card_name: str = datetime.datetime.strftime(datetime.datetime.now(),
                                                 '%Y/%m/%d %H:%M')
@@ -29,19 +41,19 @@ def main():
 
     usual_items = get_usual_items(usual_list)
 
-    if args.last_trip:
+    if last_trip_arg:
         last_trip = get_last_trip(trip_list)
         if last_trip is not None:
             add_missed_items(next_trip_list, last_trip, usual_items)
 
     lists_to_use = [next_trip_list, recipes]
-    if not args.short_trip:
+    if not short_trip_arg:
         lists_to_use.append(usual_list)
     # Get the list of groceries from the Usual Trello list
     items = get_item_list(lists_to_use)
 
     print(f'Creating new trip: {card_name}')
-    create_trip(card_name, trip_list, items, position='top')
+    return create_trip(card_name, trip_list, items, position='top')
 
 
 def get_last_trip(trip_list: trello.List) -> Optional[trello.Card]:
@@ -222,4 +234,7 @@ def get_args() -> argparse.Namespace:
 
 
 if __name__ == '__main__':
-    main()
+    args = get_args()
+    print(f'short trip: {args.short_trip}')
+    print(f'last trip: {args.last_trip}')
+    main(args.short_trip, args.last_trip)
