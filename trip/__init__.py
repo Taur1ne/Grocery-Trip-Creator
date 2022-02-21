@@ -30,5 +30,9 @@ def create_app(test_config=None):
         # from . import routes
         from trip.grocery_trip_creator import groceries
         app.register_blueprint(groceries.bp)
+
+        @app.route('/', methods=['GET'])
+        def hello():
+            return 'Hello, user!'
         return app
 
