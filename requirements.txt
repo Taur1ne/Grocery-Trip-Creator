@@ -8,7 +8,7 @@ importlib-metadata==4.8.3
 itsdangerous==2.0.1
 Jinja2==3.0.3
 MarkupSafe==2.0.1
-oauthlib==3.2.0
+oauthlib==3.2.2
 pkg_resources==0.0.0
 py-trello==0.18.0
 python-dateutil==2.8.2
